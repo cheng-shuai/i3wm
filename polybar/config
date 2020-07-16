@@ -9,9 +9,11 @@ foreground-alt = #555
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
+tray-background = #00000000
 
 
-[bar/mystatus]
+[bar/mybar]
+enable-ipc = true
 ;monitor = ${env:MONITOR:HDMI-1}
 width = 100%
 height = 27
@@ -43,15 +45,17 @@ font-0 = Roboto Mono:pixelsize=9;1
 font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-2 = Font Awesome 5 Free Solid:style=Solid:pixelsize=12;2
 font-3 = Font Awesome 5 Free Regular:style=Regular;pixelsize=12;1
+font-4 = TW\-MOE\-Std\-Kai,教育部標準楷書:style=Regular=12;1
+font-5 = enQuanYi Zen Hei,文泉驛正黑,文泉驿正黑:style=Regular=12;1
 
 
-modules-left = i3
+modules-left = i3 spotify previous playpause next
 modules-center = xwindow
-modules-right = network spotify memory temperature volume battery date time powermenu
+modules-right = network temperature volume battery date time 
 
-tray-position = right
-tray-padding = 6
-tray-background = #000000
+tray-position = left
+;tray-padding = 6
+;tray-background = #000000
 ;tray-transparent = true
 
 ;wm-restack = bspwm
@@ -125,7 +129,7 @@ ws-icon-1 = 2;2:
 ws-icon-2 = 3;3:
 ws-icon-3 = 4;4:
 ws-icon-4 = 5;5:
-ws-icon-5 = 6;6:
+ws-icon-5 = 6;6:
 ws-icon-default =10:
 
 ;wrapping-scroll = false
@@ -434,12 +438,43 @@ label-disconnected = not connected
 ;label-disconnected-foreground = #66ffffff
 format-padding = 0
 
+[module/previous]
+type = custom/ipc
+format-font = 2
+; Default
+hook-0 = echo ""
+; When spotify active
+hook-1 = echo ""
+click-left = "spotifyctl -q previous"
+
+
+[module/next]
+type = custom/ipc
+format-font = 2
+; Default
+hook-0 = echo ""
+; When spotify active
+hook-1 = echo ""
+click-left = "spotifyctl -q next"
+
+
+[module/playpause]
+type = custom/ipc
+format-font = 2
+; Default
+hook-0 = echo ""
+; Playing
+hook-1 = echo ""
+; Paused
+hook-2 = echo ""
+click-left = "spotifyctl -q playpause"
+
+
 [module/spotify]
-type = custom/script
-interval = 1
-format-prefix =
-format = <label>
-exec = python ~/.config/polybar/spotify.py
-format-underline = #1db954
+type = custom/ipc
+; Default
+hook-0 = echo ""
+; Playing/paused show song name and artist
+hook-1 = spotifyctl -q status --format '%artist%: %title%'
 
 ; vim:ft=dosini
